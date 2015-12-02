@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple News Feed</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id"
+          content="960578944665-hiuuf0sclgeh6s18bqg56sn77bamd1pq.apps.googleusercontent.com">
+</head>
+<body>
+<h1>Simple News Feed</h1>
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<div id="comments"></div>
+<p id="userId"></p>
+<div id="commentForm"></div>
+<a href="#" onclick="signOut();">Sign out</a>
+<script>
+    function onSignIn(googleUser) {
+        var id_token = googleUser.getAuthResponse().id_token;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                var posts = JSON.parse(xhr.responseText);
+                for (var i = 0; i < posts.length; i++) {
+                    var userName = document.createElement("h2");
+                    userName.appendChild(document.createTextNode(posts[i]['userName']));
+                    document.getElementById("comments").appendChild(userName);
+                    var postText = document.createElement("p");
+                    postText.appendChild(document.createTextNode(posts[i]['postText']));
+                    document.getElementById("comments").appendChild(postText);
+                }
+            }
+        };
+        xhr.open('GET', 'https://okjl4ze1lc.execute-api.us-east-1.amazonaws.com/prod');
+        xhr.send('idtoken=' + id_token);
+
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open('POST', 'https://yourbackend.example.com/tokensignin');
+        xhr2.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr2.onreadystatechange = function () {
+            if (xhr2.readyState == 4) {
+                document.getElementById("userId").innerHTML = xhr2.responseText;
+            }
+        };
+        xhr2.send('idtoken=' + id_token);
+
+        //Set up comment form
+        var form = document.createElement("form");
+        var input = document.createElement("input");
+        input.setAttribute("type", "text");
+        form.appendChild(input);
+        document.getElementById("commentForm").appendChild(form);
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+            document.getElementById("comments").innerHTML = "Please sign in to see comments";
+            document.getElementById("commentForm").innerHTML = "";
+        });
+    }
+</script>
+</body>
+</html>
