@@ -10,6 +10,17 @@ AWS.config.update({
 
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
+function putPost(userId, postText, callback) {
+    dynamodbDoc.put({
+        Item: {
+            timestamp: Date.now(),
+            userId: userId,
+            postText: postText,
+        },
+        TableName : "postsV2",
+    }, callback);
+}
+
 exports.handler = function(event, context) {
     var url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + event.id_token;
     https.get(url, function(res) {
@@ -45,15 +56,7 @@ exports.handler = function(event, context) {
                                 context.fail();
                             } else {
                                 console.log("User Put succeeded.");
-                                //Put the post
-                                dynamodbDoc.put({
-                                    Item: {
-                                        timestamp: Date.now(),
-                                        userId: parseInt(userInfo.sub),
-                                        postText: event.postText,
-                                    },
-                                    TableName : "postsV2",
-                                }, function(err, data) {
+                                putPost(parseInt(userInfo.sub), event.postText, function(err, data) {
                                     if (err) {
                                         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                                         context.fail();
@@ -65,14 +68,7 @@ exports.handler = function(event, context) {
                             }
                         });
                     } else {
-                        dynamodbDoc.put({
-                            Item: {
-                                timestamp: Date.now(),
-                                userId: parseInt(userInfo.sub),
-                                postText: event.postText,
-                            },
-                            TableName : "postsV2",
-                        }, function(err, data) {
+                        putPost(parseInt(userInfo.sub), event.postText, function(err, data) {
                             if (err) {
                                 console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
                                 context.fail();
