@@ -11,7 +11,7 @@ AWS.config.update({
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
 var params = {
-    TableName : "posts",
+    TableName : "postsV2",
 };
 var https = require('https');
 var posts;
@@ -26,6 +26,9 @@ exports.handler = function(event, context) {
     var url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + event.id_token;
     https.get(url, function(res) {
         console.log("Got response: " + res.statusCode);
+        if (res.statusCode != 200) {
+            context.fail()
+        }
         res.on('data', function (chunk) {
             console.log('BODY: ' + chunk);
             var item = JSON.parse(chunk);
@@ -42,7 +45,6 @@ exports.handler = function(event, context) {
                                 callback();
                             });
                             delete item.userId;
-                            delete item.postId;
                         },
                         function(err) {
                             context.succeed(data.Items);        
