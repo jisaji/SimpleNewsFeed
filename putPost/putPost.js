@@ -59,7 +59,7 @@ exports.handler = function(event, context) {
                                         context.fail();
                                     } else {
                                         console.log("Put succeeded.");
-                                        context.succeed(data);
+                                        context.succeed("Post Succeeded. Press the back button to see posts");
                                     }
                                 });
                             }
@@ -78,7 +78,7 @@ exports.handler = function(event, context) {
                                 context.fail();
                             } else {
                                 console.log("Put succeeded.");
-                                context.succeed(data);
+                                context.succeed("Post Succeeded. Press the back button to see posts");
                             }
                         });
                     }
