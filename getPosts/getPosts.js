@@ -45,6 +45,7 @@ exports.handler = function(event, context) {
                                 callback();
                             });
                             delete item.userId;
+                            delete item.timestamp;
                         },
                         function(err) {
                             context.succeed(data.Items);        
