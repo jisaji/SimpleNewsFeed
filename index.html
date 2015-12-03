@@ -30,8 +30,8 @@
                 }
             }
         };
-        xhr.open('GET', 'https://okjl4ze1lc.execute-api.us-east-1.amazonaws.com/prod');
-        xhr.send('id_token=' + id_token);
+        xhr.open('GET', 'https://okjl4ze1lc.execute-api.us-east-1.amazonaws.com/prod?id_token=' + id_token);
+        xhr.send();
 
         var xhr2 = new XMLHttpRequest();
         xhr2.open('POST', 'https://yourbackend.example.com/tokensignin');
