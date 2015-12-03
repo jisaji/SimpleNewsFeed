@@ -10,15 +10,6 @@ AWS.config.update({
 
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
-var params = {
-    Item: {
-        timestamp: 1,
-        userId: 0,
-        postText: "Does this work??"
-    },
-    TableName : "postsV2",
-};
-
 exports.handler = function(event, context) {
     var url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + event.id_token;
     https.get(url, function(res) {
