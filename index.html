@@ -33,21 +33,23 @@
         xhr.open('GET', 'https://okjl4ze1lc.execute-api.us-east-1.amazonaws.com/prod?id_token=' + id_token);
         xhr.send();
 
-        var xhr2 = new XMLHttpRequest();
-        xhr2.open('POST', 'https://yourbackend.example.com/tokensignin');
-        xhr2.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr2.onreadystatechange = function () {
-            if (xhr2.readyState == 4) {
-                document.getElementById("userId").innerHTML = xhr2.responseText;
-            }
-        };
-        xhr2.send('idtoken=' + id_token);
         console.log(id_token);
         //Set up comment form
         var form = document.createElement("form");
+        form.setAttribute("action", "https://okjl4ze1lc.execute-api.us-east-1.amazonaws.com/prod");
+        form.setAttribute("method", "post");
         var input = document.createElement("input");
         input.setAttribute("type", "text");
+        input.setAttribute("name", "postText");
+        var idInput = document.createElement("input");
+        idInput.setAttribute("type", "hidden");
+        idInput.setAttribute("name", "id_token");
+        idInput.setAttribute("value", id_token);
+        var submit = document.createElement("input");
+        submit.setAttribute("type", "submit");
         form.appendChild(input);
+        form.appendChild(idInput);
+        form.appendChild(submit);
         document.getElementById("commentForm").appendChild(form);
     }
 
